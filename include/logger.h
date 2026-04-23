@@ -16,8 +16,12 @@ struct LogEntry {
 class Logger {
 private:
     std::vector<LogEntry> logs;
+    bool showInConsole; 
 
 public:
+    Logger(bool consoleOutput = true); // конструктор
+    ~Logger();                         // деструктор 
+
     void addLog(LogLevel level, const std::string& msg);
     void printLogs() const;
     void saveToFile(const std::string& filename) const;

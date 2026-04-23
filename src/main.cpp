@@ -2,15 +2,11 @@
 #include <iostream>
 
 int main() {
-    std::cout << "Running Logger Application..." << std::endl;
-    
     Logger myLogger; 
+
+    myLogger.addLog(LogLevel::INFO, "Program started");
+    myLogger.addLog(LogLevel::WARNING, "Testing automatic systems");
+    myLogger.addLog(LogLevel::ERROR, "Just a test error");
     
-    myLogger.addLog(LogLevel::INFO, "Project started successfully");
-    myLogger.addLog(LogLevel::WARNING, "Testing warning message");
-    
-    myLogger.saveToFile("logs.txt");
-    
-    std::cout << "Done! Check your logs.txt file." << std::endl;
     return 0;
 }
