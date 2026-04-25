@@ -19,10 +19,13 @@ private:
     bool showInConsole; 
 
 public:
-    Logger(bool consoleOutput = true); // конструктор
+    Logger(bool consoleOutput = true); // конструктор (прапорець виводу у консоль)
     ~Logger();                         // деструктор 
 
     void addLog(LogLevel level, const std::string& msg);
     void printLogs() const;
     void saveToFile(const std::string& filename) const;
+    void filterByLevel(LogLevel level) const;
+    void findByMessage(const std::string& keyword) const;
+    void printStatistics() const;
 };

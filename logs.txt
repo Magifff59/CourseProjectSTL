@@ -1,3 +1,5 @@
-[2026-04-23 20:17:18] [INFO] Program started
-[2026-04-23 20:17:18] [WARNING] Testing automatic systems
-[2026-04-23 20:17:18] [ERROR] Just a test error
+[2026-04-25 20:13:27] [INFO] System online
+[2026-04-25 20:13:27] [WARNING] Low memory
+[2026-04-25 20:13:27] [ERROR] Critical failure
+[2026-04-25 20:13:27] [INFO] User login
+[2026-04-25 20:13:27] [ERROR] Disk error

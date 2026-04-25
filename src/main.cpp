@@ -4,9 +4,15 @@
 int main() {
     Logger myLogger; 
 
-    myLogger.addLog(LogLevel::INFO, "Program started");
-    myLogger.addLog(LogLevel::WARNING, "Testing automatic systems");
-    myLogger.addLog(LogLevel::ERROR, "Just a test error");
-    
+    myLogger.addLog(LogLevel::INFO, "System online");
+    myLogger.addLog(LogLevel::WARNING, "Low memory");
+    myLogger.addLog(LogLevel::ERROR, "Critical failure");
+    myLogger.addLog(LogLevel::INFO, "User login");
+    myLogger.addLog(LogLevel::ERROR, "Disk error");
+   
+    myLogger.filterByLevel(LogLevel::ERROR);
+    myLogger.findByMessage("User");
+    myLogger.printStatistics();
+
     return 0;
 }
