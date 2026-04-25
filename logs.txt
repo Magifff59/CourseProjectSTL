@@ -1,5 +1,2 @@
-[2026-04-25 20:13:27] [INFO] System online
-[2026-04-25 20:13:27] [WARNING] Low memory
-[2026-04-25 20:13:27] [ERROR] Critical failure
-[2026-04-25 20:13:27] [INFO] User login
-[2026-04-25 20:13:27] [ERROR] Disk error
+[2026-04-25 20:51:47] [INFO] App started
+[2026-04-25 20:51:47] [TRACE] {FUNC: someComplexFunction} -> Starting heavy computation...

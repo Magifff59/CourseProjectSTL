@@ -3,7 +3,7 @@
 #include <string>
 #include <ctime>
 
-enum class LogLevel { INFO, WARNING, ERROR };
+enum class LogLevel { INFO, WARNING, ERROR, TRACE };
 
 struct LogEntry {
     std::time_t timestamp;
@@ -28,4 +28,7 @@ public:
     void filterByLevel(LogLevel level) const;
     void findByMessage(const std::string& keyword) const;
     void printStatistics() const;
+    void clearLogs();
+    void removeLogsByLevel(LogLevel level);
+    void trace(const std::string& funcName, const std::string& msg);
 };

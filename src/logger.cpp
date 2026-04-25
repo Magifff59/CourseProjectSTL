@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <algorithm>
 
 // конструктор - ініціалізація прапорця показу у консолі
 Logger::Logger(bool consoleOutput) : showInConsole(consoleOutput) {}
@@ -27,6 +28,7 @@ void Logger::addLog(LogLevel level, const std::string& msg) {
             case LogLevel::INFO:    levelStr = "INFO"; break;
             case LogLevel::WARNING: levelStr = "WARNING"; break;
             case LogLevel::ERROR:   levelStr = "ERROR"; break;
+            case LogLevel::TRACE:   levelStr = "TRACE"; break;
         }
         std::cout << "[Console Log] [" << levelStr << "] " << msg << std::endl;
     }
@@ -53,6 +55,7 @@ void Logger::saveToFile(const std::string& filename) const {
                 case LogLevel::INFO:    levelStr = "INFO"; break;
                 case LogLevel::WARNING: levelStr = "WARNING"; break;
                 case LogLevel::ERROR:   levelStr = "ERROR"; break;
+                case LogLevel::TRACE:   levelStr = "TRACE"; break;
             }
             outFile << "[" << levelStr << "] " << entry.message << "\n";
         }
@@ -62,8 +65,15 @@ void Logger::saveToFile(const std::string& filename) const {
 
 // фільтрує та виводе лоґи за рівнем
 void Logger::filterByLevel(LogLevel level) const {
-    std::string targetLevel = (level == LogLevel::INFO) ? "INFO" : 
-                              (level == LogLevel::WARNING) ? "WARNING" : "ERROR";
+    std::string targetLevel;
+    
+    // юзаємо switch, бо рівнів тепер 4 для зручности
+    switch (level) {
+        case LogLevel::INFO:    targetLevel = "INFO"; break;
+        case LogLevel::WARNING: targetLevel = "WARNING"; break;
+        case LogLevel::ERROR:   targetLevel = "ERROR"; break;
+        case LogLevel::TRACE:   targetLevel = "TRACE"; break;
+    }
     
     std::cout << "\n========== FILTERING BY LVL: " << targetLevel << " ==========" << std::endl;
     
@@ -71,6 +81,10 @@ void Logger::filterByLevel(LogLevel level) const {
     for (const auto& entry : logs) {
         if (entry.level == level) {
             std::tm* lt = std::localtime(&entry.timestamp);
+            
+            // якщо це TRACE, додає візуальну мітку, щоб він виділявся
+            if (level == LogLevel::TRACE) std::cout << "[~] "; 
+            
             std::cout << "[" << std::put_time(lt, "%H:%M:%S") << "] " << entry.message << std::endl;
             found = true;
         }
@@ -88,7 +102,7 @@ void Logger::findByMessage(const std::string& keyword) const {
     
     bool found = false;
     for (const auto& entry : logs) {
-        // Перевіряємо, чи є слово keyword всередині entry.message
+        // перевірка, чи є слово keyword всередині entry.message
         if (entry.message.find(keyword) != std::string::npos) {
             std::tm* lt = std::localtime(&entry.timestamp);
             std::cout << "[" << std::put_time(lt, "%H:%M:%S") << "] " << entry.message << std::endl;
@@ -107,12 +121,13 @@ void Logger::printStatistics() const {
     int infoCount = 0;
     int warningCount = 0;
     int errorCount = 0;
-
+    int traceCount = 0;
     for (const auto& entry : logs) {
         switch (entry.level) {
             case LogLevel::INFO:    infoCount++; break;
             case LogLevel::WARNING: warningCount++; break;
             case LogLevel::ERROR:   errorCount++; break;
+            case LogLevel::TRACE:   traceCount++; break;
         }
     }
 
@@ -121,11 +136,37 @@ void Logger::printStatistics() const {
     std::cout << "[INFO]:    " << infoCount << std::endl;
     std::cout << "[WARNING]: " << warningCount << std::endl;
     std::cout << "[ERROR]:   " << errorCount << std::endl;
-    
+    std::cout << "[TRACE]:   " << traceCount << std::endl;
+
     if (logs.size() > 0) {
-        // Проста математика: відсоток помилок
+        // відсоток помилок
         double errorRate = (static_cast<double>(errorCount) / logs.size()) * 100;
         std::cout << "Error Rate: " << errorRate << "%" << std::endl;
     }
     std::cout << "========================================================================" << std::endl;
+}
+
+// очищення ВСІХ лоґів
+void Logger::clearLogs() {
+    logs.clear();
+    std::cout << "[System] All logs cleared." << std::endl;
+}
+
+// видалення логів за рівнем
+void Logger::removeLogsByLevel(LogLevel level) {
+    //  алгоритм, який "відсуває" непотрібні елементи в кінець, а потім видаляє їх
+    auto it = std::remove_if(logs.begin(), logs.end(), [level](const LogEntry& entry) {
+        return entry.level == level;
+    });
+    
+    int count = std::distance(it, logs.end());
+    logs.erase(it, logs.end());
+    
+    std::cout << "[System] Removed " << count << " entries of specified level." << std::endl;
+}
+
+// трейсинґ повідомлень з ім'ям ф-ції
+void Logger::trace(const std::string& funcName, const std::string& msg) {
+    std::string fullMsg = "{FUNC: " + funcName + "} -> " + msg;
+    addLog(LogLevel::TRACE, fullMsg);
 }
