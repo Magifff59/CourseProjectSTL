@@ -3,7 +3,7 @@
 #include <string>
 #include <ctime>
 
-enum class LogLevel { INFO, WARNING, ERROR, TRACE };
+enum class LogLevel { DEBUG, TRACE, INFO, WARNING, ERROR, FATAL };
 
 struct LogEntry {
     std::time_t timestamp;
@@ -16,7 +16,10 @@ struct LogEntry {
 class Logger {
 private:
     std::vector<LogEntry> logs;
-    bool showInConsole; 
+    bool showInConsole;
+    std::string getColor(LogLevel level) const;
+    std::string levelToString(LogLevel level) const;
+    void printLogEntry(const LogEntry& entry) const; 
 
 public:
     Logger(bool consoleOutput = true); // конструктор (прапорець виводу у консоль)
@@ -31,4 +34,5 @@ public:
     void clearLogs();
     void removeLogsByLevel(LogLevel level);
     void trace(const std::string& funcName, const std::string& msg);
+    void fatal(const std::string& msg);
 };
