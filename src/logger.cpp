@@ -7,10 +7,29 @@
 
 #define ANSI_RESET "\033[0m"
 
-// ==================== БЛОК ІНІЦІАЛІЗАЦІЇ ====================
+// ===========================|БЛОК ІНІЦІАЛІЗАЦІЇ|===========================
 // конструктор запису 
 LogEntry::LogEntry(LogLevel l, std::string msg) : level(l), message(msg) {
+
     timestamp = std::time(nullptr);
+}
+
+// реалізація таймеру
+Timer::Timer(const std::string& name, Logger& logger) 
+    : functionName(name), loggerRef(logger) {
+    startPoint = std::chrono::high_resolution_clock::now();
+}
+Timer::~Timer() {
+    auto endPoint = std::chrono::high_resolution_clock::now();
+    
+    // обчислення тривалости в мікросекундах
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endPoint - startPoint).count();
+    
+    // переведення у мілісекунди для зручности
+    double ms = duration / 1000.0;
+
+    // автоматичний запис результату в лоґ через посилання на лоґер
+    loggerRef.addLog(LogLevel::TRACE, "PROFILER: " + functionName + " execution took " + std::to_string(ms) + " ms");
 }
 
 // конструктор - ініціалізація прапорця показу у консолі
@@ -22,9 +41,10 @@ Logger::~Logger() {
     std::cout << "[System] Logger shutting down. All logs saved to logs.txt" << std::endl;
 }
 
-// ==================== СЛУЖБОВІ МЕТОДИ (ГЕЛПЕРИ) ====================
+// ========================|СЛУЖБОВІ МЕТОДИ (ГЕЛПЕР)|========================
 // рівень повідомлень
 std::string Logger::levelToString(LogLevel level) const {
+
     switch (level) {
         case LogLevel::DEBUG:   return "DEBUG";
         case LogLevel::TRACE:   return "TRACE";
@@ -49,7 +69,7 @@ std::string Logger::getColor(LogLevel level) const {
     }
 }
 
-// ==================== ОСНОВНА ЛОГІКА ====================
+// =============================|ОСНОВНА ЛОГІКА|=============================
 // додає лоґа та виводить у консоль (якщо дозволено)
 void Logger::addLog(LogLevel level, const std::string& msg) {
     // emplace_back для ефективности
@@ -77,7 +97,7 @@ void Logger::fatal(const std::string& msg) {
     addLog(LogLevel::FATAL, msg);
 }
 
-// ==================== ВИВІД, ФІЛЬТР, ПОШУК, СТАТИСТИКА ====================
+// ====================|ВИВІД, ФІЛЬТР, ПОШУК, СТАТИСТИКА|====================
 // допоміжний метод для форматованого виводу одного запису
 void Logger::printLogEntry(const LogEntry& entry) const {
     std::tm* lt = std::localtime(&entry.timestamp);
@@ -98,6 +118,21 @@ void Logger::printLogs() const {
     for (const auto& entry : logs) {
         printLogEntry(entry); // виклик printLogEntry 
     }
+}
+
+// впорядкування лоґів за часом
+void Logger::sortByTimestamp(bool descending) {
+    if (logs.empty()) return;
+
+    std::sort(logs.begin(), logs.end(), [descending](const LogEntry& a, const LogEntry& b) {
+        if (descending) {
+            return a.timestamp > b.timestamp; // нові зверху
+        } else {
+            return a.timestamp < b.timestamp; // старі зверху
+        }
+    });
+
+    std::cout << "[System] Logs sorted " << (descending ? "(newest first)" : "(oldest first)") << std::endl;
 }
 
 // фільтрує та виводе лоґи за рівнем
@@ -191,7 +226,7 @@ void Logger::printStatistics() const {
     std::cout << "====================================" << std::endl;
 }
 
-// ==================== РОБОТА З ФАЙЛАМИ ТА ЧИСТКА ====================
+// =======================|РОБОТА З ФАЙЛАМИ ТА ЧИСТКА|=======================
 // зберігає лоґи у файл
 void Logger::saveToFile(const std::string& filename) const {
     std::ofstream outFile(filename);
@@ -212,6 +247,11 @@ void Logger::clearLogs() {
     logs.clear();
     // юзається сірий/синій колір для системних повідомлень
     std::cout << "\033[94m[System] All logs cleared from memory.\033[0m" << std::endl;
+}
+
+// перевірка на порожнечу
+bool Logger::isEmpty() const {
+    return logs.empty();
 }
 
 // видалення лоґів за рівнем
