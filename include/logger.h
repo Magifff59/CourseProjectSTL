@@ -10,8 +10,10 @@ struct LogEntry {
     std::time_t timestamp;
     LogLevel level;
     std::string message;
+    std::string threadId;
+    std::string funcName;
 
-    LogEntry(LogLevel l, std::string msg);
+    LogEntry(LogLevel l, std::string msg, std::string fName = "");
 };
 
 // ==================================|КЛАС ТАЙМЕРУ|==================================
@@ -42,16 +44,44 @@ public:
     Logger(bool consoleOutput = true); // конструктор (прапорець виводу у консоль)
     ~Logger();                         // деструктор 
 
-    void addLog(LogLevel level, const std::string& msg);
+    void addLog(LogLevel level, const std::string& msg, std::string funcName = "");
     void printLogs() const;
     void saveToFile(const std::string& filename) const;
-    void filterByLevel(LogLevel level) const;
-    void findByMessage(const std::string& keyword) const;
+    void saveToFile(const std::string& filename, const std::vector<LogEntry>& data) const;
+    std::vector<LogEntry> filterByLevel(LogLevel level) const;
+    std::vector<LogEntry> findByMessage(const std::string& keyword) const;
     void printStatistics() const;
     void clearLogs();
     void removeLogsByLevel(LogLevel level);
-    void trace(const std::string& funcName, const std::string& msg);
-    void fatal(const std::string& msg);
     void sortByTimestamp(bool descending = true);
     bool isEmpty() const; 
+    void loadFromFile(const std::string& filename);
+    std::vector<LogEntry> getRecentLogs(const std::vector<LogEntry>& source, int hours) const;
+};
+
+#define LOG_TRACE(logger, msg) logger.addLog(LogLevel::TRACE, msg, __FUNCTION__)
+#define LOG_ERROR(logger, msg) logger.addLog(LogLevel::ERROR, msg, __FUNCTION__)
+#define LOG_FATAL(logger, msg) logger.addLog(LogLevel::FATAL, msg, __FUNCTION__)
+
+// ===============================|КЛАС ПРОФАЙЛЕРИНҐУ|===============================
+class Profiler {
+    Logger& logger;
+    std::string actionName;
+    std::chrono::steady_clock::time_point startTime;
+
+public:
+    // при створенні фіксація часу
+    Profiler(Logger& l, const std::string& name) 
+        : logger(l), actionName(name), startTime(std::chrono::steady_clock::now()) {}
+
+    // при знищенні (кінець блоку {}) рахує різницю і пише в лоґ
+    ~Profiler() {
+        auto endTime = std::chrono::steady_clock::now();
+        std::chrono::duration<double, std::milli> duration = endTime - startTime;
+        
+        std::string report = "PROFILER: " + actionName + " took " + std::to_string(duration.count()) + " ms";
+        
+        // метод TRACE для звіту
+        logger.addLog(LogLevel::TRACE, report, "Profiler");
+    }
 };
