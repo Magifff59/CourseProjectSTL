@@ -4,7 +4,8 @@
 #include <vector>
 #include <ctime>
 #include <cstdlib>
-#include <limits>  
+#include <limits>
+ 
 
 #define ANSI_RESET "\033[0m"
 
@@ -61,134 +62,192 @@ void generateRandomLogs(Logger& logger, int count) {
 
 // --- ОСНОВНА ПРОГРАМА ---
 
+// банер при запуску
+void showWelcomeBanner() {
+    std::cout << "\033[1;35m"; // пурпуровий колір 
+    std::cout << R"(
+ ______ _   _  _____ _    _          _   _ _______ _____ __  __
+|  ____| \ | |/ ____| |  | |   /\   | \ | |__   __|_   _|\ \/ /
+| |__  |  \| | |    | |__| |  /  \  |  \| |  | |    | |   \  /
+|  __| | . ` | |    |  __  | / /\ \ | . ` |  | |    | |    \/  
+| |____| |\  | |____| |  | |/ ____ \| |\  |  | |   _| |_  /  \
+|______|_| \_|\_____|_|  |_/_/    \_\_| \_|  |_|  |_____|/_/\_\
+    )" << std::endl;
+    std::cout << "           >>> SYSTEM READY | ALL MODULES LOADED <<<" << std::endl;
+    std::cout << "               [ v1.0 | High-Speed Diagnostic ]" << std::endl;
+    std::cout << "\033[0m" << std::endl;
+}
+
+void showMenu() {
+    std::cout << "\033[1;36m"; // Блакитний колір
+    std::cout << "  +-------------------------------------+" << std::endl;
+    std::cout << "  |        ENCHANTIX LOGGER MENU        |" << std::endl;
+    std::cout << "  +-------------------------------------+" << std::endl;
+    std::cout << "  |  [1] Add Log    |  [5] Statistics   |" << std::endl;
+    std::cout << "  |  [2] View All   |  [6] Clear All    |" << std::endl;
+    std::cout << "  |  [3] Filter     |  [7] Generate     |" << std::endl;
+    std::cout << "  |  [4] Search     |  [8] Trace Test   |" << std::endl;
+    std::cout << "  +-------------------------------------+" << std::endl;
+    std::cout << "  |           [0] Emergency Exit        |" << std::endl;
+    std::cout << "  +-------------------------------------+" << std::endl;
+}
+
 int main() {
     srand(static_cast<unsigned int>(time(0)));
-    Logger myLogger(true);
-    myLogger.loadFromFile("logs.txt"); // історія лоґів 
     
+    // банер при запуску
+    showWelcomeBanner();
+    Logger myLogger(true);
+    myLogger.loadFromFile("logs.txt"); 
+    
+    std::cout << "\033[94m[System] Database loaded. Press Enter to open Menu...\033[0m";
+    std::cin.get(); // жде натискання Enter для переходу до меню
+
     int choice;
     do {
-        clearScreen(); // Очищаємо екран при кожному поверненні в меню
-        std::cout << "===== ENCHANTIX LOGGER MENU =====" << std::endl;
-        std::cout << "[1] Add new log manually" << std::endl;
-        std::cout << "[2] Show all logs" << std::endl;
-        std::cout << "[3] Filter by level" << std::endl;  
-        std::cout << "[4] Search by keyword" << std::endl;  
-        std::cout << "[5] Show statistics" << std::endl;    
-        std::cout << "[6] Clear all logs" << std::endl;  
-        std::cout << "[7] Generate random logs" << std::endl;
-        std::cout << "[8] Test TRACE and Profiler" << std::endl;
-        std::cout << "[0] Exit" << std::endl;
-        std::cout << "=================================" << std::endl;
-        std::cout << "Choice: ";
+        clearScreen();
+        showMenu(); // показ меню
         
-        if (!(std::cin >> choice)) {
-            std::cout << "Invalid input. Please enter a number." << std::endl;
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            waitForEnter();
-            continue;
-        }
+        choice = myLogger.getValidInt("  Choice >> ", 0, 8);
 
         switch (choice) {
             // ручне додавання лоґу
             case 1: {
-                int lvlIdx;
                 std::string msg;
-                std::cout << "Select level (0:DEBUG, 1:TRACE, 2:INFO, 3:WARNING, 4:ERROR, 5:FATAL): ";
-                std::cin >> lvlIdx;
+
+                // --- ДИЗАЙН ВИБОРУ РІВНЯ ---
+                std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
+                std::cout << "  |            SELECT LOG LEVEL             |" << std::endl;
+                std::cout << "  +-----------------------------------------+" << std::endl;
+                std::cout << "  | [0] \033[1;34mDEBUG\033[1;36m    |  [1] \033[1;36mTRACE\033[1;36m  |  [2] \033[1;32mINFO\033[1;36m  |" << std::endl;
+                std::cout << "  | [3] \033[1;33mWARNING\033[1;36m  |  [4] \033[1;31mERROR\033[1;36m  |  [5] \033[1;35mFATAL\033[1;36m |" << std::endl;
+                std::cout << "  +-----------------------------------------+\033[0m" << std::endl;
+                
+                // ф-ція перевірки для рівня
+                int lvlIdx = myLogger.getValidInt("  Choice >> ", 0, 5);
                 
                 // перетворення індексу на тип LogLevel для зручности
                 LogLevel selectedLevel = static_cast<LogLevel>(lvlIdx);
 
-                // очищення буферу ПЕРЕД getline
+                // очищення буферу ПЕРЕД getline 
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
-                std::cout << "Enter message: ";
+                
+                std::cout << "  Enter message: ";
                 std::getline(std::cin, msg);
                 
                 // АВТОМАТИЧНЕ ТРАСУВАННЯ ДЛЯ КРИТИЧНИХ ТИПІВ
-                if (selectedLevel == LogLevel::TRACE) {
-                    LOG_TRACE(myLogger, msg);
-                } 
-                else if (selectedLevel == LogLevel::ERROR) {
-                    LOG_ERROR(myLogger, msg);
-                } 
-                else if (selectedLevel == LogLevel::FATAL) {
-                    LOG_FATAL(myLogger, msg);
-                } 
-                else {
-                    // для всіх інших (INFO, DEBUG, WARNING) додає без назви функції
-                    myLogger.addLog(selectedLevel, msg);
-                }
+                if (selectedLevel == LogLevel::TRACE) LOG_TRACE(myLogger, msg);
+                else if (selectedLevel == LogLevel::ERROR) LOG_ERROR(myLogger, msg);
+                else if (selectedLevel == LogLevel::FATAL) LOG_FATAL(myLogger, msg);
+                else myLogger.addLog(selectedLevel, msg); // для всіх інших (INFO, DEBUG, WARNING) додає без назви функції
 
-                std::cout << "[System] Log added successfully.";
-                std::cout << "\n(Note: You might need to press Enter twice)"; // підказка користувачу
+                std::cout << "\033[94m[System] Log added successfully.\033[0m" << std::endl;
+                std::cout << "\n" << "\033[1;37;46m" << "(Note: You might need to press Enter twice)" << "\033[0m" << std::endl; // підказка користувачу
+                
                 waitForEnter(); 
                 break;
             }
             
             // показ усіх лоґів з можливістю сортування
-            case 2: {
-                if (myLogger.isEmpty()) {
-                    std::cout << "Log list is empty." << std::endl;
-                } else {
-                    std::cout << "How to display logs?\n1. Newest first\n2. Oldest first\nChoice: ";
-                    int sortChoice;
-                    std::cin >> sortChoice;
+           case 2: {
+            if (myLogger.isEmpty()) {
+                std::cout << "\n\033[1;33m  [!] Log list is empty.\033[0m" << std::endl;
+            } else {
+                int sortChoice = 0;
+                
+                // --- ДИЗАЙН ВИБОРУ СОРТУВАННЯ ---
+                std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
+                std::cout << "  |           DISPLAY CONFIGURATION         |" << std::endl;
+                std::cout << "  +-----------------------------------------+" << std::endl;
+                std::cout << "  | [1] Newest first (Latest on top)        |" << std::endl;
+                std::cout << "  | [2] Oldest first (Chronological)        |" << std::endl;
+                std::cout << "  +-----------------------------------------+\033[0m" << std::endl;
 
-                    // замірювання сортування та вивід разом
-                    Profiler p(myLogger, "Full Log Display");
-                    myLogger.sortByTimestamp(sortChoice == 1);
-                    myLogger.printLogs();
+                // поки користувач не введе 1 або 2
+                while (true) {
+                    std::cout << "  Choice >> ";
+
+                    if (!(std::cin >> sortChoice)) { 
+                        // введено літери
+                        std::cin.clear(); // скид прапорця помилки cin
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // чистка буферу
+                        std::cout << "\n\033[1;31m  [!] Invalid input! Please enter a NUMBER (1 or 2).\033[0m" << std::endl;
+                        continue; 
+                    }
+
+                    if (sortChoice != 1 && sortChoice != 2) {
+                        // введено число, але не 1 чи 2
+                        std::cout << "\n\033[1;31m  [!] Choice must be 1 or 2! Try again.\033[0m" << std::endl;
+                        continue;
+                    }
+
+                    break; // введення правильне - вихід з циклу
                 }
-                waitForEnter();
-                break;
+
+                // сортування та вивід (тільки після успішного вибору)
+                Profiler p(myLogger, "Full Log Display");
+                myLogger.sortByTimestamp(sortChoice == 1);
+                myLogger.printLogs();
+            }
+            waitForEnter();
+            break;
             }
             
             // фільтрація за рівнем
             case 3: {
-                int lvlIdx;
-                std::cout << "Select level to filter (0:DEBUG, 1:TRACE, 2:INFO, 3:WARNING, 4:ERROR, 5:FATAL): ";
-                std::cin >> lvlIdx;
+                std::string msg;
+
+                // --- ДИЗАЙН ВИБОРУ РІВНЯ ФІЛЬТРУ ---
+                std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
+                std::cout << "  |        SELECT LOG LEVEL TO FILTER       |" << std::endl;
+                std::cout << "  +-----------------------------------------+" << std::endl;
+                std::cout << "  | [0] \033[1;34mDEBUG\033[1;36m    |  [1] \033[1;36mTRACE\033[1;36m  |  [2] \033[1;32mINFO\033[1;36m  |" << std::endl;
+                std::cout << "  | [3] \033[1;33mWARNING\033[1;36m  |  [4] \033[1;31mERROR\033[1;36m  |  [5] \033[1;35mFATAL\033[1;36m |" << std::endl;
+                std::cout << "  +-----------------------------------------+\033[0m" << std::endl;
+                
+                int lvlIdx = myLogger.getValidInt("  Choice >> ", 0, 5);
 
                 // отримує первинну вибірку
                 auto results = myLogger.filterByLevel(static_cast<LogLevel>(lvlIdx));
 
                 if (!results.empty()) {
-                    std::cout << "\nFound " << results.size() << " entries. Export to file? (Yes [y]/No [n]): ";
-                    char choice;
-                    std::cin >> choice;
+                    std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
+                    std::cout << "    Found: \033[1;37m" << results.size() << " entries\033[1;36m " << std::endl;
+                    std::cout << "  +-----------------------------------------+\033[0m" << std::endl;
+            
+                    // перевірка y/n
+                    char expChoice = myLogger.getValidChar("    Export to file? (YES - y / NO - n) >> ", "y or n");
 
-                    if (choice == 'y' || choice == 'Y') {
-                        // фільтр за часом (опційно)
-                        std::cout << "Filter by time? \n1. No (All found)\n2. Yes (Last N hours)\nChoice: ";
-                        int timeChoice;
-                        std::cin >> timeChoice;
+                    if (expChoice == 'y') {                        
+                        // перевірка вибору 1 або 2
+                        int timeChoice = myLogger.getValidInt("    Filter by time? (NO - 1 / YES - 2) >> ", 1, 2);
 
                         std::vector<LogEntry> finalResults = results;
                         if (timeChoice == 2) {
-                            int hrs;
-                            std::cout << "Enter hours: ";
-                            std::cin >> hrs;
+                            // перевірка годин (наприклад від 1год до 8760год - рік)
+                            int hrs = myLogger.getValidInt("    Enter hours (1-8760) >> ", 1, 8760);
                             finalResults = myLogger.getRecentLogs(results, hrs);
-                            std::cout << "Final count after time filter: " << finalResults.size() << std::endl;
+                            std::cout << "    Final count after filter: " << finalResults.size() << std::endl;
                         }
-
-                        if (!finalResults.empty()) {
-                            // кастомне ім'я файлу
-                            std::cout << "Enter filename (press Enter for 'filter_report.txt'): ";
+                        
+                             if (!finalResults.empty()) {
+                            std::cout << "\033[1;36m  +-----------------------------------------+\033[0m" << std::endl;
+                            std::cout << "    (Enter for default 'filter_report.txt') " << std::endl;
+                            std::cout << "    Filename >> ";
+        
                             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                             std::string fName;
                             std::getline(std::cin, fName);
-
+                            
                             if (fName.empty()) fName = "filter_report.txt";
-                            if (fName.find(".txt") == std::string::npos) fName += ".txt";
-
                             myLogger.saveToFile(fName, finalResults);
                         }
                     }
+                } else {
+                    std::cout << "  \033[1;33m[!] No matching logs found.\033[0m" << std::endl;
                 }
-                std::cout << "\n(Note: You might need to press Enter twice)"; // підказка користувачу
+
+                std::cout << "\n" << "\033[1;37;46m" << " (Note: You might need to press Enter twice) " << "\033[0m" << std::endl; // підказка користувачу
                 waitForEnter();
                 break;
             }
@@ -196,7 +255,7 @@ int main() {
             // пошук за ключовим словом
             case 4: {
                 std::string key;
-                std::cout << "Enter keyword to search: ";
+                std::cout << "\n  Enter keyword to search: ";
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::getline(std::cin, key);
 
@@ -206,31 +265,36 @@ int main() {
                 {
                     Profiler p(myLogger, "Keyword Search [" + key + "]");
                     results = myLogger.findByMessage(key); 
-                } // Тут профайлер p знищується і миттєво видає реальний час пошуку
+                } // самознищення профайлеру p і миттєво видає реальний час пошуку
 
                 if (!results.empty()) {
-                    std::cout << "\nFound " << results.size() << " entries. Export to file? (Yes [y]/No [n]): ";
-                    char choice;
-                    std::cin >> choice;
+                    // --- ДИЗАЙН РЕЗУЛЬТАТІВ ПОШУКУ ---
+                    std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
+                    std::cout << "    Found: \033[1;37m" << results.size() << " entries\033[1;36m " << std::endl;
+                    std::cout << "  +-----------------------------------------+\033[0m" << std::endl;
+                    
+                    // перевірка y/n
+                    char expChoice = myLogger.getValidChar("    Export to file? (YES - y / NO - n) >> ", "y or n");
 
-                    if (choice == 'y' || choice == 'Y') {
-                        std::cout << "Filter by time? \n1. No (All found)\n2. Yes (Last N hours)\nChoice: ";
-                        int timeChoice;
-                        std::cin >> timeChoice;
+                    if (expChoice == 'y') {
+                        
+                        // перевірка вибору 1 або 2
+                        int timeChoice = myLogger.getValidInt("    Filter by time? (NO - 1 / YES - 2) >> ", 1, 2);
 
                         std::vector<LogEntry> finalResults = results;
                         if (timeChoice == 2) {
-                            int hrs;
-                            std::cout << "Enter hours: ";
-                            std::cin >> hrs;
+                            // перевірка годин (наприклад від 1год до 8760год - рік)
+                            int hrs = myLogger.getValidInt("    Enter hours (1-8760) >> ", 1, 8760);
                             
-                            // Можна додати профайлер і сюди, якщо цікаво, як швидко фільтрує час
                             finalResults = myLogger.getRecentLogs(results, hrs);
-                            std::cout << "Final count after time filter: " << finalResults.size() << std::endl;
+                            std::cout << "    Final count after time filter: " << finalResults.size() << std::endl;
                         }
 
                         if (!finalResults.empty()) {
-                            std::cout << "Enter filename (press Enter for 'search_report.txt'): ";
+                            std::cout << "\033[1;36m  +-----------------------------------------+\033[0m" << std::endl;
+                            std::cout << "    (Enter for default 'filter_report.txt') " << std::endl;
+                            std::cout << "    Filename >> ";
+
                             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                             std::string fName;
                             std::getline(std::cin, fName);
@@ -238,65 +302,101 @@ int main() {
                             if (fName.empty()) fName = "search_report.txt";
                             if (fName.find(".txt") == std::string::npos) fName += ".txt";
 
-                            // Тут профайлер спрацює всередині самого методу saveToFile
                             myLogger.saveToFile(fName, finalResults);
                         }
                     }
                 } else {
-                    std::cout << "[System] No logs found with this keyword." << std::endl;
+                    std::cout << "\033[94m[System] No logs found with this keyword.\033[0m" << std::endl;
                 }
 
-                std::cout << "\n(Note: You might need to press Enter twice)"; // підказка користувачу
                 waitForEnter();
                 break;
             }
             
             // показ статистики
-            case 5:
+            case 5: {
                 myLogger.printStatistics();
                 waitForEnter();
                 break;
+            }
             
             // очищення списку лоґів
-            case 6:
-                myLogger.clearLogs();
-                std::cout << "Logs cleared!" << std::endl;
+            case 6: {
+                if (myLogger.isEmpty()) {
+                    std::cout << "\n\033[1;33m  [!] Log list is already empty.\033[0m" << std::endl;
+                } else {
+                    // --- ДИЗАЙН МЕНЮ ОЧИЩЕННЯ ---
+                    std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
+                    std::cout << "  |             CLEANUP OPTIONS             |" << std::endl;
+                    std::cout << "  +-----------------------------------------+" << std::endl;
+                    std::cout << "  | [1] Clear ALL logs (Wipe memory)        |" << std::endl;
+                    std::cout << "  | [2] Remove logs by specific LEVEL       |" << std::endl;
+                    std::cout << "  | [0] Cancel                              |" << std::endl;
+                    std::cout << "  +-----------------------------------------+\033[0m" << std::endl;
+
+                    int cleanChoice = myLogger.getValidInt("  Choice >> ", 0, 2);
+
+                    if (cleanChoice == 1) {
+                        myLogger.clearLogs();
+                    } 
+                    else if (cleanChoice == 2) {
+                        // --- ДИЗАЙН ВИБОРУ РІВНЯ ДЛЯ ОЧИЩЕННЯ ---
+                        std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
+                        std::cout << "  |          SELECT LEVEL TO REMOVE         |" << std::endl;
+                        std::cout << "  +-----------------------------------------+" << std::endl;
+                        std::cout << "  | [0] DEBUG  | [1] TRACE | [2] INFO       |" << std::endl;
+                        std::cout << "  | [3] WARN   | [4] ERROR | [5] FATAL      |" << std::endl;
+                        std::cout << "  +-----------------------------------------+\033[0m" << std::endl;
+                        
+                        int lvlIdx = myLogger.getValidInt("  Level to wipe >> ", 0, 5);
+                        myLogger.removeLogsByLevel(static_cast<LogLevel>(lvlIdx));
+                    }
+                    else {
+                        std::cout << "\033[94m[System] Cleanup cancelled.\033[0m" << std::endl;
+                    }
+                }
+                
                 waitForEnter();
                 break;
+            }
             
-            // генерація випадкових лоґів
+            // генерація випадкових лоґів для тестування    
             case 7: {
-                int count;
-                std::cout << "How many random logs to generate? (e.g., 100): ";
-                if (!(std::cin >> count)) {
-                    std::cin.clear();
-                    std::cin.ignore(10000, '\n');
-                    std::cout << "Invalid number!" << std::endl;
-                } else {
-                    generateRandomLogs(myLogger, count);
-                    std::cout << "[System] " << count << " logs generated successfully." << std::endl;
-                }
+                int count = myLogger.getValidInt("  How many logs to generate? (1-10000) >> ", 1, 10000);  
+                generateRandomLogs(myLogger, count); 
+                std::cout << "\033[94m[System] Generated " << count << " random logs.\033[0m" << std::endl;
+               
                 waitForEnter();
                 break;
             }
             
             // тест ручного трасування
             case 8: {
-                // Використовуємо наш новий макрос
-                LOG_TRACE(myLogger, "User requested a manual trace test");
-    
-                std::cout << "[System] Trace log added using macro." << std::endl;
+                LOG_TRACE(myLogger, "Manual trace test initiated");
+                std::cout << "\033[94m[System] Trace log added using macro.\033[0m" <<  std::endl;
                 waitForEnter();
                 break;
             }
             
             // вихід з програми
-            case 0:
-                std::cout << "Exiting program..." << std::endl;
+            case 0: {
+                clearScreen();
+                    // блакитний колір 
+                    std::cout << "\033[1;36m" << "==========================================" << std::endl;
+                    std::cout << "          ENCHANTIX SESSION ENDED         " << std::endl;
+                    std::cout << "==========================================\033[0m" << std::endl;
+                   
+                    // текст білий, а число getCount() яскраво-жовте
+                    std::cout << "Logs processed in this session: " << "\033[1;33m" << myLogger.getCount() << "\033[0m" << std::endl;
+
+                    // текст білий, саме значення __TIME__ блакитне 
+                    std::cout << "Build Time: " << "\033[1;36m" << __TIME__ << "\033[0m" << std::endl; 
                 break;
-            default:
-                std::cout << "Unknown option. Try again." << std::endl;
+                
+                default:
+                std::cout << "Unknown option." << std::endl;
                 waitForEnter();
+            }
         }
     } while (choice != 0);
 

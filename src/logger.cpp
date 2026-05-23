@@ -48,7 +48,7 @@ Logger::Logger(bool consoleOutput) : showInConsole(consoleOutput) {}
 // деструктор - автоматично зберігає лоґи при завершенні роботи
 Logger::~Logger() {
     saveToFile("logs.txt");
-    std::cout << "[System] Logger shutting down. All logs saved to logs.txt" << std::endl;
+    std::cout << "\033[94m[System] Logger shutting down. All logs saved to logs.txt\033[0m" << std::endl;
 }
 
 // ========================|СЛУЖБОВІ МЕТОДИ (ГЕЛПЕР)|========================
@@ -91,7 +91,6 @@ void Logger::addLog(LogLevel level, const std::string& msg, std::string funcName
     }
 }
 
-// ====================|ВИВІД, ФІЛЬТР, ПОШУК, СТАТИСТИКА|====================
 // допоміжний метод для форматованого виводу одного запису
 void Logger::printLogEntry(const LogEntry& entry) const {
     std::tm* lt = std::localtime(&entry.timestamp);
@@ -116,7 +115,11 @@ void Logger::printLogEntry(const LogEntry& entry) const {
 
 // виводе УСІ лоґи у консоль
 void Logger::printLogs() const {
-    std::cout << "\n====================== Full Log History ======================" << std::endl;
+    
+    std::cout << "\n\033[1;36m  +-------------------------------------+" << std::endl;
+    std::cout << "  |           FULL LOG HISTORY          |" << std::endl;
+    std::cout << "  +-------------------------------------+" << std::endl;
+    
     for (const auto& entry : logs) {
         printLogEntry(entry); // виклик printLogEntry 
     }
@@ -134,7 +137,7 @@ void Logger::sortByTimestamp(bool descending) {
         }
     });
 
-    std::cout << "[System] Logs sorted " << (descending ? "(newest first)" : "(oldest first)") << std::endl;
+    std::cout << "\033[94m[System] Logs sorted " << (descending ? "(newest first)" : "(oldest first)") << "\033[0m" << std::endl;
 }
 
 // фільтрує та виводе лоґи за рівнем і повертає їх список для експортування
@@ -142,7 +145,11 @@ std::vector<LogEntry> Logger::filterByLevel(LogLevel level) const {
     std::vector<LogEntry> result; // зберігання копії знайдених лоґів
     
     std::string targetLevel = levelToString(level);
-    std::cout << "\n====================== FILTERING BY LVL: " << targetLevel << " ======================" << std::endl;
+    
+    std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
+    std::cout << "           FILTERED BY LEVEL: " << targetLevel << "        " << std::endl;
+    std::cout << "  +-----------------------------------------+" << std::endl;
+
     
     for (const auto& entry : logs) {
         if (entry.level == level) {
@@ -154,8 +161,6 @@ std::vector<LogEntry> Logger::filterByLevel(LogLevel level) const {
     if (result.empty()) {
         std::cout << "No logs found for this level." << std::endl;
     }
-    
-    std::cout << "========================================================================" << std::endl;
     
     return result;
 }
@@ -169,7 +174,9 @@ std::vector<LogEntry> Logger::findByMessage(const std::string& keyword) const {
     std::transform(lowerKeyword.begin(), lowerKeyword.end(), lowerKeyword.begin(), 
                    [](unsigned char c){ return std::tolower(c); });
 
-    std::cout << "\n======================== SEARCHING FOR: \"" << keyword << "\" ========================" << std::endl;
+    std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
+    std::cout << "              SEARCHED FOR: " << keyword << std::endl;
+    std::cout << "  +-----------------------------------------+" << std::endl;
 
     for (const auto& entry : logs) {
         // копія тексту лоґу також у нижньому регістрі
@@ -179,7 +186,7 @@ std::vector<LogEntry> Logger::findByMessage(const std::string& keyword) const {
 
         // пошук входження
         if (lowerMessage.find(lowerKeyword) != std::string::npos) {
-            printLogEntry(entry); // друкуємо у консоль
+            printLogEntry(entry); // друкує у консоль
             result.push_back(entry); // додає до списку результатів
         }
     }
@@ -188,9 +195,35 @@ std::vector<LogEntry> Logger::findByMessage(const std::string& keyword) const {
         std::cout << "No logs found matching your request." << std::endl;
     }
     
-    std::cout << "============================================================================" << std::endl;
-    
     return result; // повертає вектор знайдених лоґів
+}
+
+// для перевірки символів (y/n)
+char Logger::getValidChar(const std::string& prompt, const std::string& validOptions) {
+    char input;
+    while (true) {
+        std::cout << prompt;
+        std::cin >> input;
+        input = std::tolower(input); // щоб працювало і 'Y', і 'y'
+        if (validOptions.find(input) != std::string::npos) return input;
+        
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "\033[1;31m  [!] Invalid choice! Use one of: " << validOptions << "\033[0m\n";
+    }
+}
+
+// для перевірки чисел (діапазон від min до max)
+int Logger::getValidInt(const std::string& prompt, int min, int max) {
+    int input;
+    while (true) {
+        std::cout << prompt;
+        if (std::cin >> input && input >= min && input <= max) return input;
+        
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "\033[1;31m  [!] Invalid input! Enter a number between " << min << " and " << max << ".\033[0m\n";
+    }
 }
 
 // отримання лоґів за останні N годин
@@ -215,10 +248,10 @@ void Logger::printStatistics() const {
         return;
     }
 
-    // Створюємо карту для автоматичного підрахунку
+    // карта для автоматичного підрахунку
     std::map<LogLevel, int> counts;
     
-    // Ініціалізуємо всі можливі рівні нулями
+    // ініціалізація всіх можливих рівнів нулями
     counts[LogLevel::DEBUG] = 0;
     counts[LogLevel::TRACE] = 0;
     counts[LogLevel::INFO] = 0;
@@ -226,41 +259,46 @@ void Logger::printStatistics() const {
     counts[LogLevel::ERROR] = 0;
     counts[LogLevel::FATAL] = 0;
 
-    // Рахуємо в один цикл
+    // підрахування одиним циклом
     for (const auto& entry : logs) {
         counts[entry.level]++;
     }
 
-    std::cout << "\n\033[1m======== LOG STATISTICS ========\033[0m" << std::endl;
-    std::cout << "Total entries: " << logs.size() << std::endl;
+    // --- ДИЗАЙН СТАТИСНИКИ ---
+    std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
+    std::cout << "  |             LOG STATISTICS              |" << std::endl;
+    std::cout << "  +-----------------------------------------+" << std::endl;
 
-    // Проходимо по карті і виводимо дані, використовуючи твої методи кольорів
-    // Ми використовуємо вектор рівнів, щоб зберегти твій специфічний порядок виводу
+    std::cout << "    Total entries:           \033[1;37m" << std::setw(6) << logs.size() << "\033[1;36m  |" << std::endl;
+    std::cout << "  +-----------------------------------------+" << std::endl;
+
+    // проходка по карті і виведення даних, використовуючи уже наявні методи кольорів
     std::vector<LogLevel> order = { 
         LogLevel::DEBUG, LogLevel::TRACE, LogLevel::INFO, 
         LogLevel::WARNING, LogLevel::ERROR, LogLevel::FATAL 
     };
 
     for (LogLevel lvl : order) {
-        std::cout << getColor(lvl) << std::left << std::setw(10) 
-                  << "[" + levelToString(lvl) + "]: " 
-                  << counts[lvl] << "\033[0m" << std::endl;
+        std::cout << "    " << getColor(lvl) << std::left << std::setw(12) 
+                  << "[" + levelToString(lvl) + "]" << "\033[0m" << " :           " 
+                  << std::right << std::setw(6) << counts[lvl] << "  \033[1;36m|" << std::endl;
     }
 
-    // Твій крутий блок аналітики критичних помилок
+    // блок аналітики критичних помилок
     double totalErrors = counts[LogLevel::ERROR] + counts[LogLevel::FATAL];
     double errorRate = (totalErrors / logs.size()) * 100;
 
-    std::cout << "--------------------------------" << std::endl;
-    std::cout << "Critical Issues Rate: ";
+    std::cout << "  +-----------------------------------------+" << std::endl;
+    std::cout << "    Critical Issues Rate:    ";
     
-    if (errorRate > 20.0) std::cout << "\033[31m\033[1m"; // Жирний червоний, якщо все погано
+    // динамічний колір для відсотка
+    if (errorRate > 20.0) std::cout << "\033[1;31m"; // жирний червоний - все погано
+    else std::cout << "\033[1;32m";                  // зелений - все ок
     
-    std::cout << std::fixed << std::setprecision(2) << errorRate << "%" << "\033[0m" << std::endl;
-    std::cout << "================================" << std::endl;
+    std::cout << std::fixed << std::setprecision(2) << std::setw(6) << errorRate << "%" << "\033[1;36m   |" << std::endl;
+    std::cout << "  +-----------------------------------------+\033[0m" << std::endl;
 }
 
-// =======================|РОБОТА З ФАЙЛАМИ ТА ЧИСТКА|=======================
 // імпорт лоґів з файлу з оригінальним часом їх створення
 void Logger::loadFromFile(const std::string& filename) {
     Profiler p(*this, "History Restoration");
@@ -316,24 +354,26 @@ void Logger::loadFromFile(const std::string& filename) {
     }
     inFile.close();
     if (loadedCount > 0) {
-        std::cout << "[System] History restored: " << loadedCount << " logs loaded." << std::endl;
+        std::cout << "\033[94m[System] History restored: " << loadedCount << " logs loaded." << "\033[0m" << std::endl;
     }
 }
 
 // зберігає лоґи у файл 
 void Logger::saveToFile(const std::string& filename) const {
+
     Profiler p(const_cast<Logger&>(*this), "Full History Save");
-    
     std::ofstream outFile(filename);
+
     if (outFile.is_open()) {
         for (const auto& entry : logs) {
             std::tm* localTime = std::localtime(&entry.timestamp);
             outFile << "[" << std::put_time(localTime, "%Y-%m-%d %H:%M:%S") << "] "
                     << "[" << levelToString(entry.level) << "] " << entry.message << "\n";
+
         }
         outFile.close();
     }
-}
+} 
 
 // зберігає конкретний набір лоґів у файл (для експорту результатів фільтрації/пошуку)
 void Logger::saveToFile(const std::string& filename, const std::vector<LogEntry>& data) const {
@@ -347,7 +387,7 @@ void Logger::saveToFile(const std::string& filename, const std::vector<LogEntry>
                     << "[" << levelToString(entry.level) << "] " << entry.message << "\n";
         }
         outFile.close();
-        std::cout << "[System] Report saved to " << filename << std::endl;
+        std::cout << "\033[94m[System] Report saved to " << filename << "\033[0m" << std::endl;
     }
 }
 
