@@ -6,11 +6,12 @@
 #include <cstdlib>
 #include <limits>
  
-
+// маркос скидання кольору у консолі
 #define ANSI_RESET "\033[0m"
 
 // --- СЕРВІСНІ ФУНКЦІЇ ІНТЕРФЕЙСУ ---
 
+// ф-ція очищення екрану (кросплатформно)
 void clearScreen() {
 #ifdef _WIN32
     std::system("cls");   
@@ -18,7 +19,7 @@ void clearScreen() {
     std::system("clear"); 
 #endif
 }
-
+// ф-ція очікування Enter
 void waitForEnter() {
     std::cout << "\n" << ANSI_RESET << "[Press Enter to return to the menu...]";
     // перевірка залишку в буфері символу переходу на новий рядок
@@ -32,11 +33,12 @@ void waitForEnter() {
     std::cin.get(); 
 }
 
-// --- ГЕНЕРАТОР ЛОГІВ ---
+// -----------------------------------
 
+// генератор лоґів для тестування
 void generateRandomLogs(Logger& logger, int count) {
     Profiler p(logger, "Random Generation of " + std::to_string(count) + " logs");
-    // списки для створення різноманітних повідомлень
+    // списки створення різноманітних повідомлень
     std::vector<std::string> actions = {"User login", "Data backup", "Request", "Connection", "System update"};
     std::vector<std::string> objects = {"Database", "AuthService", "MainServer", "Storage", "UI_Module"};
     std::vector<std::string> results = {"successful", "failed", "timed out", "denied", "intercepted"};
@@ -62,7 +64,7 @@ void generateRandomLogs(Logger& logger, int count) {
 
 // --- ОСНОВНА ПРОГРАМА ---
 
-// банер при запуску
+// дизайн банеру при запуску
 void showWelcomeBanner() {
     std::cout << "\033[1;35m"; // пурпуровий колір 
     std::cout << R"(
@@ -77,9 +79,9 @@ void showWelcomeBanner() {
     std::cout << "               [ v1.0 | High-Speed Diagnostic ]" << std::endl;
     std::cout << "\033[0m" << std::endl;
 }
-
+// дизайн головного меню
 void showMenu() {
-    std::cout << "\033[1;36m"; // Блакитний колір
+    std::cout << "\033[1;36m"; // блакитний колір
     std::cout << "  +-------------------------------------+" << std::endl;
     std::cout << "  |        ENCHANTIX LOGGER MENU        |" << std::endl;
     std::cout << "  +-------------------------------------+" << std::endl;
@@ -92,10 +94,11 @@ void showMenu() {
     std::cout << "  +-------------------------------------+" << std::endl;
 }
 
+// головна функція з кейсами вибору користувача
 int main() {
     srand(static_cast<unsigned int>(time(0)));
     
-    // банер при запуску
+    // показ банеру при запуску
     showWelcomeBanner();
     Logger myLogger(true);
     myLogger.loadFromFile("logs.txt"); 
@@ -103,6 +106,7 @@ int main() {
     std::cout << "\033[94m[System] Database loaded. Press Enter to open Menu...\033[0m";
     std::cin.get(); // жде натискання Enter для переходу до меню
 
+    // запам'ятовує час початку сесії 
     auto sessionStart = std::chrono::system_clock::now();
     std::time_t start_time = std::chrono::system_clock::to_time_t(sessionStart);
 
@@ -118,7 +122,7 @@ int main() {
             case 1: {
                 std::string msg;
 
-                // --- ДИЗАЙН ВИБОРУ РІВНЯ ---
+                // дизайн вибору рівня лоґу
                 std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
                 std::cout << "  |            SELECT LOG LEVEL             |" << std::endl;
                 std::cout << "  +-----------------------------------------+" << std::endl;
@@ -132,7 +136,7 @@ int main() {
                 // перетворення індексу на тип LogLevel для зручности
                 LogLevel selectedLevel = static_cast<LogLevel>(lvlIdx);
 
-                // очищення буферу ПЕРЕД getline 
+                // очищення буферу ПЕРЕД getline (на випадок залишку після getValidInt)
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
                 
                 std::cout << "  Enter message: ";
@@ -145,7 +149,9 @@ int main() {
                 else myLogger.addLog(selectedLevel, msg); // для всіх інших (INFO, DEBUG, WARNING) додає без назви функції
 
                 std::cout << "\033[94m[System] Log added successfully.\033[0m" << std::endl;
-                std::cout << "\n" << "\033[1;37;46m" << "(Note: You might need to press Enter twice)" << "\033[0m" << std::endl; // підказка користувачу
+                
+                // підказка користувачу
+                std::cout << "\n" << "\033[1;37;46m" << "(Note: You might need to press Enter twice)" << "\033[0m" << std::endl; 
                 
                 waitForEnter(); 
                 break;
@@ -158,7 +164,7 @@ int main() {
             } else {
                 int sortChoice = 0;
                 
-                // --- ДИЗАЙН ВИБОРУ СОРТУВАННЯ ---
+                // дизайн вибору сортування
                 std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
                 std::cout << "  |           DISPLAY CONFIGURATION         |" << std::endl;
                 std::cout << "  +-----------------------------------------+" << std::endl;
@@ -200,7 +206,7 @@ int main() {
             case 3: {
                 std::string msg;
 
-                // --- ДИЗАЙН ВИБОРУ РІВНЯ ФІЛЬТРУ ---
+                // дизайн вибору рівня фільтрації
                 std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
                 std::cout << "  |        SELECT LOG LEVEL TO FILTER       |" << std::endl;
                 std::cout << "  +-----------------------------------------+" << std::endl;
@@ -250,7 +256,8 @@ int main() {
                     std::cout << "  \033[1;33m[!] No matching logs found.\033[0m" << std::endl;
                 }
 
-                std::cout << "\n" << "\033[1;37;46m" << " (Note: You might need to press Enter twice) " << "\033[0m" << std::endl; // підказка користувачу
+                // підказка користувачу
+                std::cout << "\n" << "\033[1;37;46m" << " (Note: You might need to press Enter twice) " << "\033[0m" << std::endl; 
                 waitForEnter();
                 break;
             }
@@ -264,14 +271,14 @@ int main() {
 
                 std::vector<LogEntry> results;
 
-                // ОБЛАСТЬ ДІЇ ПРОФАЙЛЕРА: тільки сам пошук у пам'яті
+                // ОБЛАСТЬ ДІЇ ПРОФАЙЛЕРА (тільки сам пошук у пам'яті)
                 {
                     Profiler p(myLogger, "Keyword Search [" + key + "]");
                     results = myLogger.findByMessage(key); 
                 } // самознищення профайлеру p і миттєво видає реальний час пошуку
 
                 if (!results.empty()) {
-                    // --- ДИЗАЙН РЕЗУЛЬТАТІВ ПОШУКУ ---
+                    // дизайн результатів пошуку
                     std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
                     std::cout << "    Found: \033[1;37m" << results.size() << " entries\033[1;36m " << std::endl;
                     std::cout << "  +-----------------------------------------+\033[0m" << std::endl;
@@ -312,7 +319,8 @@ int main() {
                     std::cout << "\033[94m[System] No logs found with this keyword.\033[0m" << std::endl;
                 }
                 
-                std::cout << "\n" << "\033[1;37;46m" << " (Note: You might need to press Enter twice) " << "\033[0m" << std::endl; // підказка користувачу
+                // підказка користувачу
+                std::cout << "\n" << "\033[1;37;46m" << " (Note: You might need to press Enter twice) " << "\033[0m" << std::endl; 
                 waitForEnter();
                 break;
             }
@@ -329,7 +337,7 @@ int main() {
                 if (myLogger.isEmpty()) {
                     std::cout << "\n\033[1;33m  [!] Log list is already empty.\033[0m" << std::endl;
                 } else {
-                    // --- ДИЗАЙН МЕНЮ ОЧИЩЕННЯ ---
+                    // дизайн вибору типу очищення
                     std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
                     std::cout << "  |             CLEANUP OPTIONS             |" << std::endl;
                     std::cout << "  +-----------------------------------------+" << std::endl;
@@ -344,7 +352,7 @@ int main() {
                         myLogger.clearLogs();
                     } 
                     else if (cleanChoice == 2) {
-                        // --- ДИЗАЙН ВИБОРУ РІВНЯ ДЛЯ ОЧИЩЕННЯ ---
+                        // дизайн вибору рівня очищення
                         std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
                         std::cout << "  |          SELECT LEVEL TO REMOVE         |" << std::endl;
                         std::cout << "  +-----------------------------------------+" << std::endl;
@@ -386,7 +394,7 @@ int main() {
             case 0: {
                 clearScreen();
                 
-                // Розрахунок часу завершення та тривалості сесії
+                // розрахунок часу завершення та тривалості сесії
                 auto sessionEnd = std::chrono::system_clock::now();
                 std::time_t end_time = std::chrono::system_clock::to_time_t(sessionEnd);
                 
@@ -394,7 +402,7 @@ int main() {
                 int minutes = duration.count() / 60;
                 int seconds = duration.count() % 60;
 
-                // --- SESSION DASHBOARD ---
+                // дизайн фінального звіту при виході
                 std::cout << "\n\033[1;36m+-------------------------------------------+" << std::endl;
                 std::cout << "|         ENCHANTIX SESSION SUMMARY         |" << std::endl;
                 std::cout << "+-------------------------------------------+\033[0m" << std::endl;
@@ -411,11 +419,6 @@ int main() {
                 std::cout << "   Build Version:  \033[1;34m" << __TIME__ << " (Stable)         \033[0m" << std::endl;
                 
                 std::cout << "\033[1;36m+-------------------------------------------+\033[0m" << std::endl;
-                
-                // Емоційне підтвердження успіху
-                std::cout << "\n\033[1;32m[OK] Database state synchronized with logs.txt\033[0m" << std::endl;
-                std::cout << "\033[1;32m[OK] All diagnostic buffers cleared.\033[0m" << std::endl;
-                std::cout << "\n\033[1;36mStatus: \033[1;37;42m SHUTDOWN SUCCESSFUL \033[0m\n" << std::endl;
                 
                 break;
             }
