@@ -1,30 +1,86 @@
-[2026-05-23 17:36:11] [TRACE] PROFILER: History Restoration took 0.156000 ms
-[2026-05-23 17:41:39] [TRACE] PROFILER: History Restoration took 1.207000 ms
-[2026-05-23 17:48:37] [TRACE] PROFILER: History Restoration took 1.097000 ms
-[2026-05-23 17:49:25] [TRACE] PROFILER: History Restoration took 0.932000 ms
-[2026-05-23 18:02:48] [TRACE] PROFILER: History Restoration took 1.019000 ms
-[2026-05-23 18:03:29] [TRACE] PROFILER: History Restoration took 1.110000 ms
-[2026-05-23 18:03:42] [TRACE] PROFILER: Full Log Display took 5.438000 ms
-[2026-05-23 18:03:49] [TRACE] PROFILER: Keyword Search [?] took 0.483000 ms
-[2026-05-23 18:04:39] [TRACE] PROFILER: History Restoration took 0.946000 ms
-[2026-05-23 18:04:44] [TRACE] PROFILER: Full Log Display took 10.975000 ms
-[2026-05-23 18:05:19] [TRACE] PROFILER: Keyword Search [d] took 2.717000 ms
-[2026-05-23 18:05:27] [TRACE] PROFILER: Keyword Search [fg] took 0.424000 ms
-[2026-05-23 18:05:41] [INFO] MainServer: Data backup failed (ID: 16)
-[2026-05-23 18:05:41] [INFO] MainServer: System update successful (ID: 932)
-[2026-05-23 18:05:41] [DEBUG] AuthService: User login denied (ID: 494)
-[2026-05-23 18:05:41] [ERROR] Storage: Connection denied (ID: 862)
-[2026-05-23 18:05:41] [INFO] UI_Module: System update failed (ID: 530)
-[2026-05-23 18:05:41] [INFO] MainServer: Connection successful (ID: 532)
-[2026-05-23 18:05:41] [DEBUG] MainServer: Request successful (ID: 102)
-[2026-05-23 18:05:41] [ERROR] Database: Connection successful (ID: 83)
-[2026-05-23 18:05:41] [WARNING] Database: Data backup intercepted (ID: 588)
-[2026-05-23 18:05:41] [ERROR] MainServer: Data backup successful (ID: 954)
-[2026-05-23 18:05:41] [ERROR] Database: Connection intercepted (ID: 717)
-[2026-05-23 18:05:41] [INFO] UI_Module: Request intercepted (ID: 495)
-[2026-05-23 18:05:41] [TRACE] PROFILER: Random Generation of 12 logs took 9.997000 ms
-[2026-05-23 18:05:44] [TRACE] Manual trace test initiated
-[2026-05-23 18:05:58] [WARNING] Storage: Connection failed (ID: 531)
-[2026-05-23 18:05:58] [TRACE] PROFILER: Random Generation of 1 logs took 0.815000 ms
-[2026-05-23 18:06:43] [TRACE] PROFILER: Export to filter_report.txt took 1.020000 ms
-[2026-05-23 18:07:12] [TRACE] PROFILER: History Restoration took 1.078000 ms
+[2026-05-24 17:23:22] [TRACE] PROFILER: Full Log Display took 49.938000 ms
+[2026-05-24 17:23:17] [ERROR] UI_Module: Data backup denied (ID: 310)
+[2026-05-24 17:23:17] [ERROR] UI_Module: Data backup failed (ID: 33)
+[2026-05-24 17:23:17] [INFO] Storage: System update denied (ID: 86)
+[2026-05-24 17:23:17] [ERROR] MainServer: Connection successful (ID: 140)
+[2026-05-24 17:23:17] [ERROR] Storage: Data backup failed (ID: 923)
+[2026-05-24 17:23:17] [ERROR] UI_Module: User login denied (ID: 91)
+[2026-05-24 17:23:17] [ERROR] UI_Module: System update timed out (ID: 101)
+[2026-05-24 17:23:17] [DEBUG] Storage: Connection successful (ID: 682)
+[2026-05-24 17:23:17] [ERROR] Storage: System update timed out (ID: 859)
+[2026-05-24 17:23:17] [ERROR] AuthService: Connection timed out (ID: 837)
+[2026-05-24 17:23:17] [TRACE] PROFILER: Random Generation of 35 logs took 28.793000 ms
+[2026-05-24 17:23:17] [INFO] MainServer: Data backup timed out (ID: 904)
+[2026-05-24 17:23:17] [ERROR] Storage: Data backup successful (ID: 863)
+[2026-05-24 17:23:17] [WARNING] MainServer: System update intercepted (ID: 970)
+[2026-05-24 17:23:17] [INFO] UI_Module: Data backup timed out (ID: 843)
+[2026-05-24 17:23:17] [INFO] UI_Module: System update failed (ID: 755)
+[2026-05-24 17:23:17] [ERROR] AuthService: User login timed out (ID: 890)
+[2026-05-24 17:23:17] [ERROR] Storage: System update denied (ID: 295)
+[2026-05-24 17:23:17] [DEBUG] Storage: User login failed (ID: 498)
+[2026-05-24 17:23:17] [ERROR] AuthService: System update timed out (ID: 941)
+[2026-05-24 17:23:17] [DEBUG] UI_Module: Connection denied (ID: 736)
+[2026-05-24 17:23:17] [INFO] Storage: User login intercepted (ID: 524)
+[2026-05-24 17:23:17] [WARNING] AuthService: Connection successful (ID: 192)
+[2026-05-24 17:23:17] [ERROR] Storage: System update successful (ID: 501)
+[2026-05-24 17:23:17] [WARNING] UI_Module: Connection intercepted (ID: 25)
+[2026-05-24 17:23:17] [ERROR] AuthService: Request successful (ID: 27)
+[2026-05-24 17:23:17] [ERROR] Database: Request denied (ID: 133)
+[2026-05-24 17:23:17] [WARNING] Database: System update failed (ID: 27)
+[2026-05-24 17:23:17] [ERROR] UI_Module: Connection successful (ID: 65)
+[2026-05-24 17:23:17] [DEBUG] UI_Module: Data backup failed (ID: 22)
+[2026-05-24 17:23:17] [INFO] MainServer: Request failed (ID: 306)
+[2026-05-24 17:23:17] [ERROR] Database: Connection failed (ID: 290)
+[2026-05-24 17:23:17] [WARNING] Storage: System update failed (ID: 567)
+[2026-05-24 17:23:17] [ERROR] Storage: System update denied (ID: 507)
+[2026-05-24 17:23:17] [WARNING] AuthService: System update intercepted (ID: 863)
+[2026-05-24 17:23:17] [ERROR] Database: User login timed out (ID: 450)
+[2026-05-24 17:23:10] [TRACE] PROFILER: History Restoration took 1.465000 ms
+[2026-05-24 17:07:40] [TRACE] PROFILER: Export to filter_report.txt took 1.117000 ms
+[2026-05-24 17:06:46] [DEBUG] MainServer: Data backup intercepted (ID: 839)
+[2026-05-24 17:06:46] [TRACE] PROFILER: Random Generation of 20 logs took 16.715000 ms
+[2026-05-24 17:06:46] [WARNING] MainServer: Data backup denied (ID: 687)
+[2026-05-24 17:06:46] [DEBUG] AuthService: Data backup intercepted (ID: 125)
+[2026-05-24 17:06:46] [ERROR] Database: User login denied (ID: 503)
+[2026-05-24 17:06:46] [INFO] UI_Module: User login timed out (ID: 335)
+[2026-05-24 17:06:46] [DEBUG] UI_Module: Request successful (ID: 785)
+[2026-05-24 17:06:46] [ERROR] UI_Module: Connection intercepted (ID: 330)
+[2026-05-24 17:06:46] [INFO] UI_Module: Connection denied (ID: 530)
+[2026-05-24 17:06:46] [INFO] MainServer: User login failed (ID: 538)
+[2026-05-24 17:06:46] [INFO] AuthService: Connection timed out (ID: 977)
+[2026-05-24 17:06:46] [DEBUG] MainServer: Request failed (ID: 790)
+[2026-05-24 17:06:46] [DEBUG] MainServer: Connection failed (ID: 875)
+[2026-05-24 17:06:46] [ERROR] Storage: Data backup successful (ID: 749)
+[2026-05-24 17:06:46] [WARNING] AuthService: Connection timed out (ID: 756)
+[2026-05-24 17:06:46] [DEBUG] AuthService: Request failed (ID: 239)
+[2026-05-24 17:06:46] [ERROR] UI_Module: System update failed (ID: 242)
+[2026-05-24 17:06:46] [ERROR] MainServer: User login denied (ID: 95)
+[2026-05-24 17:06:46] [WARNING] AuthService: Connection denied (ID: 405)
+[2026-05-24 17:06:46] [DEBUG] MainServer: System update intercepted (ID: 644)
+[2026-05-24 17:06:46] [ERROR] Storage: System update intercepted (ID: 573)
+[2026-05-24 17:06:36] [TRACE] PROFILER: History Restoration took 0.120000 ms
+[2026-05-24 17:23:47] [TRACE] PROFILER: Full Log Display took 50.214000 ms
+[2026-05-24 17:24:29] [TRACE] PROFILER: Export to filter_report.txt took 1.279000 ms
+[2026-05-24 17:24:35] [TRACE] PROFILER: Keyword Search [data] took 13.687000 ms
+[2026-05-24 17:25:08] [TRACE] PROFILER: Export to search_report.txt took 1.135000 ms
+[2026-05-24 17:25:20] [TRACE] PROFILER: Keyword Search [data] took 14.987000 ms
+[2026-05-24 17:25:25] [TRACE] PROFILER: Export to search_report.txt took 1.077000 ms
+[2026-05-24 17:26:54] [WARNING] MainServer: System update successful (ID: 134)
+[2026-05-24 17:26:54] [WARNING] UI_Module: Connection denied (ID: 927)
+[2026-05-24 17:26:54] [WARNING] AuthService: User login successful (ID: 295)
+[2026-05-24 17:26:54] [INFO] Database: Data backup failed (ID: 645)
+[2026-05-24 17:26:54] [ERROR] MainServer: Connection successful (ID: 174)
+[2026-05-24 17:26:54] [DEBUG] UI_Module: Connection successful (ID: 897)
+[2026-05-24 17:26:54] [DEBUG] MainServer: Data backup timed out (ID: 559)
+[2026-05-24 17:26:54] [INFO] MainServer: Data backup timed out (ID: 326)
+[2026-05-24 17:26:54] [ERROR] UI_Module: User login intercepted (ID: 631)
+[2026-05-24 17:26:54] [INFO] MainServer: Data backup failed (ID: 105)
+[2026-05-24 17:26:54] [TRACE] PROFILER: Random Generation of 10 logs took 8.539000 ms
+[2026-05-24 17:26:58] [TRACE] Manual trace test initiated
+[2026-05-24 17:29:34] [TRACE] PROFILER: History Restoration took 1.162000 ms
+[2026-05-24 17:29:41] [TRACE] PROFILER: Keyword Search [d] took 59.224000 ms
+[2026-05-24 17:29:49] [TRACE] PROFILER: Keyword Search [database] took 4.480000 ms
+[2026-05-24 17:29:56] [TRACE] PROFILER: Export to search_report.txt took 0.936000 ms
+[2026-05-24 17:36:13] [TRACE] PROFILER: History Restoration took 1.158000 ms
+[2026-05-24 17:38:32] [TRACE] PROFILER: History Restoration took 1.262000 ms
+[2026-05-24 17:40:09] [TRACE] PROFILER: History Restoration took 1.416000 ms

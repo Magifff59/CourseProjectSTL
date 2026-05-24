@@ -103,6 +103,9 @@ int main() {
     std::cout << "\033[94m[System] Database loaded. Press Enter to open Menu...\033[0m";
     std::cin.get(); // жде натискання Enter для переходу до меню
 
+    auto sessionStart = std::chrono::system_clock::now();
+    std::time_t start_time = std::chrono::system_clock::to_time_t(sessionStart);
+
     int choice;
     do {
         clearScreen();
@@ -308,7 +311,8 @@ int main() {
                 } else {
                     std::cout << "\033[94m[System] No logs found with this keyword.\033[0m" << std::endl;
                 }
-
+                
+                std::cout << "\n" << "\033[1;37;46m" << " (Note: You might need to press Enter twice) " << "\033[0m" << std::endl; // підказка користувачу
                 waitForEnter();
                 break;
             }
@@ -381,21 +385,39 @@ int main() {
             // вихід з програми
             case 0: {
                 clearScreen();
-                    // блакитний колір 
-                    std::cout << "\033[1;36m" << "==========================================" << std::endl;
-                    std::cout << "          ENCHANTIX SESSION ENDED         " << std::endl;
-                    std::cout << "==========================================\033[0m" << std::endl;
-                   
-                    // текст білий, а число getCount() яскраво-жовте
-                    std::cout << "Logs processed in this session: " << "\033[1;33m" << myLogger.getCount() << "\033[0m" << std::endl;
-
-                    // текст білий, саме значення __TIME__ блакитне 
-                    std::cout << "Build Time: " << "\033[1;36m" << __TIME__ << "\033[0m" << std::endl; 
-                break;
                 
-                default:
-                std::cout << "Unknown option." << std::endl;
-                waitForEnter();
+                // Розрахунок часу завершення та тривалості сесії
+                auto sessionEnd = std::chrono::system_clock::now();
+                std::time_t end_time = std::chrono::system_clock::to_time_t(sessionEnd);
+                
+                auto duration = std::chrono::duration_cast<std::chrono::seconds>(sessionEnd - sessionStart);
+                int minutes = duration.count() / 60;
+                int seconds = duration.count() % 60;
+
+                // --- SESSION DASHBOARD ---
+                std::cout << "\n\033[1;36m+-------------------------------------------+" << std::endl;
+                std::cout << "|         ENCHANTIX SESSION SUMMARY         |" << std::endl;
+                std::cout << "+-------------------------------------------+\033[0m" << std::endl;
+                
+                char startTimeStr[9];
+                char endTimeStr[9];
+                std::strftime(startTimeStr, sizeof(startTimeStr), "%H:%M:%S", std::localtime(&start_time));
+                std::strftime(endTimeStr, sizeof(endTimeStr), "%H:%M:%S", std::localtime(&end_time));
+
+                std::cout << "   Start Time:     \033[1;32m" << startTimeStr << "         \033[0m" << std::endl;
+                std::cout << "   End Time:       \033[1;31m" << endTimeStr << "         \033[0m" << std::endl;
+                std::cout << "   Uptime:         \033[1;33m" << minutes << "m " << seconds << "s         \033[0m" << std::endl;
+                std::cout << "   Logs Handled:   \033[1;35m" << myLogger.getCount() << "         \033[0m" << std::endl;
+                std::cout << "   Build Version:  \033[1;34m" << __TIME__ << " (Stable)         \033[0m" << std::endl;
+                
+                std::cout << "\033[1;36m+-------------------------------------------+\033[0m" << std::endl;
+                
+                // Емоційне підтвердження успіху
+                std::cout << "\n\033[1;32m[OK] Database state synchronized with logs.txt\033[0m" << std::endl;
+                std::cout << "\033[1;32m[OK] All diagnostic buffers cleared.\033[0m" << std::endl;
+                std::cout << "\n\033[1;36mStatus: \033[1;37;42m SHUTDOWN SUCCESSFUL \033[0m\n" << std::endl;
+                
+                break;
             }
         }
     } while (choice != 0);

@@ -58,6 +58,7 @@ public:
     void loadFromFile(const std::string& filename);
     std::vector<LogEntry> getRecentLogs(const std::vector<LogEntry>& source, int hours) const;
     size_t getCount() const { return logs.size(); }
+    
     // Допоміжні функції для валідації вводу
     char getValidChar(const std::string& prompt, const std::string& validOptions);
     int getValidInt(const std::string& prompt, int min, int max);

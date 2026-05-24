@@ -204,8 +204,12 @@ char Logger::getValidChar(const std::string& prompt, const std::string& validOpt
     while (true) {
         std::cout << prompt;
         std::cin >> input;
-        input = std::tolower(input); // щоб працювало і 'Y', і 'y'
-        if (validOptions.find(input) != std::string::npos) return input;
+        input = std::tolower(input); // щоб працювала велика та мала літери
+
+        // очищення буферу від усього що залишилось після першого символу
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        if (validOptions.find(input) != std::string::npos) return input; // якщо символ є допустимий - повертає його
         
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -269,7 +273,7 @@ void Logger::printStatistics() const {
     std::cout << "  |             LOG STATISTICS              |" << std::endl;
     std::cout << "  +-----------------------------------------+" << std::endl;
 
-    std::cout << "    Total entries:           \033[1;37m" << std::setw(6) << logs.size() << "\033[1;36m  |" << std::endl;
+    std::cout << "  |  Total entries:           \033[1;37m" << std::setw(6) << logs.size() << "\033[1;36m        |" << std::endl;
     std::cout << "  +-----------------------------------------+" << std::endl;
 
     // проходка по карті і виведення даних, використовуючи уже наявні методи кольорів
@@ -279,9 +283,9 @@ void Logger::printStatistics() const {
     };
 
     for (LogLevel lvl : order) {
-        std::cout << "    " << getColor(lvl) << std::left << std::setw(12) 
+        std::cout << "  |  " << getColor(lvl) << std::left << std::setw(12) 
                   << "[" + levelToString(lvl) + "]" << "\033[0m" << " :           " 
-                  << std::right << std::setw(6) << counts[lvl] << "  \033[1;36m|" << std::endl;
+                  << std::right << std::setw(6) << counts[lvl] << "  \033[1;36m      |" << std::endl;
     }
 
     // блок аналітики критичних помилок
@@ -289,13 +293,13 @@ void Logger::printStatistics() const {
     double errorRate = (totalErrors / logs.size()) * 100;
 
     std::cout << "  +-----------------------------------------+" << std::endl;
-    std::cout << "    Critical Issues Rate:    ";
+    std::cout << "  |    Critical Issues Rate:    ";
     
     // динамічний колір для відсотка
     if (errorRate > 20.0) std::cout << "\033[1;31m"; // жирний червоний - все погано
     else std::cout << "\033[1;32m";                  // зелений - все ок
     
-    std::cout << std::fixed << std::setprecision(2) << std::setw(6) << errorRate << "%" << "\033[1;36m   |" << std::endl;
+    std::cout << std::fixed << std::setprecision(2) << std::setw(6) << errorRate << "%" << "\033[1;36m     |" << std::endl;
     std::cout << "  +-----------------------------------------+\033[0m" << std::endl;
 }
 
