@@ -86,14 +86,13 @@ void showMenu() {
     std::cout << "  |        ENCHANTIX LOGGER MENU        |" << std::endl;
     std::cout << "  +-------------------------------------+" << std::endl;
     std::cout << "  |  [1] Add Log    |  [5] Statistics   |" << std::endl;
-    std::cout << "  |  [2] View All   |  [6] Clear All    |" << std::endl;
+    std::cout << "  |  [2] View All   |  [6] Clear Logs   |" << std::endl;
     std::cout << "  |  [3] Filter     |  [7] Generate     |" << std::endl;
     std::cout << "  |  [4] Search     |  [8] Trace Test   |" << std::endl;
     std::cout << "  +-------------------------------------+" << std::endl;
     std::cout << "  |           [0] Emergency Exit        |" << std::endl;
     std::cout << "  +-------------------------------------+" << std::endl;
 }
-
 // головна функція з кейсами вибору користувача
 int main() {
     srand(static_cast<unsigned int>(time(0)));
@@ -165,12 +164,12 @@ int main() {
                 int sortChoice = 0;
                 
                 // дизайн вибору сортування
-                std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
-                std::cout << "  |           DISPLAY CONFIGURATION         |" << std::endl;
-                std::cout << "  +-----------------------------------------+" << std::endl;
-                std::cout << "  | [1] Newest first (Latest on top)        |" << std::endl;
-                std::cout << "  | [2] Oldest first (Chronological)        |" << std::endl;
-                std::cout << "  +-----------------------------------------+\033[0m" << std::endl;
+                std::cout << "\n\033[1;36m  +-------------------------------------+" << std::endl;
+                std::cout << "  |         DISPLAY CONFIGURATION       |" << std::endl;
+                std::cout << "  +-------------------------------------+" << std::endl;
+                std::cout << "  | [1] Newest first (Latest on top)    |" << std::endl;
+                std::cout << "  | [2] Oldest first (Chronological)    |" << std::endl;
+                std::cout << "  +-------------------------------------+\033[0m" << std::endl;
 
                 // поки користувач не введе 1 або 2
                 while (true) {
@@ -338,13 +337,13 @@ int main() {
                     std::cout << "\n\033[1;33m  [!] Log list is already empty.\033[0m" << std::endl;
                 } else {
                     // дизайн вибору типу очищення
-                    std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
-                    std::cout << "  |             CLEANUP OPTIONS             |" << std::endl;
-                    std::cout << "  +-----------------------------------------+" << std::endl;
-                    std::cout << "  | [1] Clear ALL logs (Wipe memory)        |" << std::endl;
-                    std::cout << "  | [2] Remove logs by specific LEVEL       |" << std::endl;
-                    std::cout << "  | [0] Cancel                              |" << std::endl;
-                    std::cout << "  +-----------------------------------------+\033[0m" << std::endl;
+                    std::cout << "\n\033[1;36m  +-------------------------------------+" << std::endl;
+                    std::cout << "  |           CLEANUP OPTIONS           |" << std::endl;
+                    std::cout << "  +-------------------------------------+" << std::endl;
+                    std::cout << "  | [1] Clear ALL logs                  |" << std::endl;
+                    std::cout << "  | [2] Remove logs by specific LEVEL   |" << std::endl;
+                    std::cout << "  | [0] Cancel                          |" << std::endl;
+                    std::cout << "  +-------------------------------------+\033[0m" << std::endl;
 
                     int cleanChoice = myLogger.getValidInt("  Choice >> ", 0, 2);
 

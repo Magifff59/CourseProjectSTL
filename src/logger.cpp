@@ -327,12 +327,12 @@ void Logger::printStatistics() const {
     }
 
     // дизайн виводу статистики
-    std::cout << "\n\033[1;36m  +-----------------------------------------+" << std::endl;
-    std::cout << "  |             LOG STATISTICS              |" << std::endl;
-    std::cout << "  +-----------------------------------------+" << std::endl;
+    std::cout << "\n\033[1;36m  +-------------------------------------+" << std::endl;
+    std::cout << "  |           LOG STATISTICS            |" << std::endl;
+    std::cout << "  +-------------------------------------+" << std::endl;
 
-    std::cout << "  |  Total entries:           \033[1;37m" << std::setw(6) << logs.size() << "\033[1;36m        |" << std::endl;
-    std::cout << "  +-----------------------------------------+" << std::endl;
+    std::cout << "  |  Total entries:           \033[1;37m" << std::setw(6) << logs.size() << "\033[1;36m    |" << std::endl;
+    std::cout << "  +-------------------------------------+" << std::endl;
 
     // проходка по карті і виведення даних, використовуючи уже наявні методи кольорів
     std::vector<LogLevel> order = { 
@@ -343,22 +343,22 @@ void Logger::printStatistics() const {
     for (LogLevel lvl : order) {
         std::cout << "  |  " << getColor(lvl) << std::left << std::setw(12) 
                   << "[" + levelToString(lvl) + "]" << "\033[0m" << " :           " 
-                  << std::right << std::setw(6) << counts[lvl] << "  \033[1;36m      |" << std::endl;
+                  << std::right << std::setw(6) << counts[lvl] << "  \033[1;36m  |" << std::endl;
     }
 
     // блок аналітики критичних помилок
     double totalErrors = counts[LogLevel::ERROR] + counts[LogLevel::FATAL];
     double errorRate = (totalErrors / logs.size()) * 100;
 
-    std::cout << "  +-----------------------------------------+" << std::endl;
-    std::cout << "  |    Critical Issues Rate:    ";
+    std::cout << "  +-------------------------------------+" << std::endl;
+    std::cout << "  |  Critical Issues Rate:   ";
     
     // динамічний колір для відсотка
     if (errorRate > 20.0) std::cout << "\033[1;31m"; // жирний червоний - все погано
     else std::cout << "\033[1;32m";                  // зелений - все ок
     
-    std::cout << std::fixed << std::setprecision(2) << std::setw(6) << errorRate << "%" << "\033[1;36m     |" << std::endl;
-    std::cout << "  +-----------------------------------------+\033[0m" << std::endl;
+    std::cout << std::fixed << std::setprecision(2) << std::setw(6) << errorRate << "%" << "\033[1;36m    |" << std::endl;
+    std::cout << "  +-------------------------------------+\033[0m" << std::endl;
 }
 // перевірка на порожнечу
 bool Logger::isEmpty() const {
