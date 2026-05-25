@@ -1,0 +1,10 @@
+# виконуваний файл (результат збірки)
+logger_app.exe
+
+# файли лоґів та звітів
+logs.txt
+filter_report.txt
+search_report.txt
+
+# тимчасові файли VS Code
+.vscode/
