@@ -66,7 +66,7 @@ void generateRandomLogs(Logger& logger, int count) {
 
 // дизайн банеру при запуску
 void showWelcomeBanner() {
-    std::cout << "\033[1;35m"; // пурпуровий колір 
+    std::cout << "\033[1;35m"; // пурпуровий колір
     std::cout << R"(
  ______ _   _  _____ _    _          _   _ _______ _____ __  __
 |  ____| \ | |/ ____| |  | |   /\   | \ | |__   __|_   _|\ \/ /

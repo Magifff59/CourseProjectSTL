@@ -1,5 +1,42 @@
-[2026-05-25 12:40:25] [TRACE] PROFILER: History Restoration took 0.907000 ms
-[2026-05-25 12:39:23] [DEBUG] dhjhdkd
 [2026-05-25 12:39:12] [TRACE] PROFILER: Keyword Search [data] took 0.458000 ms
+[2026-05-25 12:39:23] [DEBUG] dhjhdkd
+[2026-05-25 12:40:25] [TRACE] PROFILER: History Restoration took 0.907000 ms
 [2026-05-25 12:40:32] [TRACE] PROFILER: Full Log Display took 2.812000 ms
 [2026-05-25 12:41:23] [TRACE] PROFILER: History Restoration took 0.937000 ms
+[2026-05-25 13:08:55] [TRACE] PROFILER: History Restoration took 0.862000 ms
+[2026-05-25 13:32:39] [TRACE] PROFILER: History Restoration took 0.804000 ms
+[2026-05-25 13:32:47] [TRACE] PROFILER: Full Log Display took 4.362000 ms
+[2026-05-25 13:33:13] [WARNING] Storage: Connection failed (ID: 494)
+[2026-05-25 13:33:13] [WARNING] AuthService: User login intercepted (ID: 415)
+[2026-05-25 13:33:13] [INFO] MainServer: Data backup successful (ID: 603)
+[2026-05-25 13:33:13] [ERROR] Database: Connection intercepted (ID: 542)
+[2026-05-25 13:33:13] [INFO] MainServer: User login timed out (ID: 881)
+[2026-05-25 13:33:13] [DEBUG] Database: Request failed (ID: 132)
+[2026-05-25 13:33:13] [INFO] MainServer: Request timed out (ID: 195)
+[2026-05-25 13:33:13] [INFO] AuthService: Request successful (ID: 444)
+[2026-05-25 13:33:13] [INFO] UI_Module: System update failed (ID: 496)
+[2026-05-25 13:33:13] [DEBUG] MainServer: Request failed (ID: 798)
+[2026-05-25 13:33:13] [TRACE] PROFILER: Random Generation of 20 logs took 11.804000 ms
+[2026-05-25 13:33:13] [DEBUG] Storage: Request intercepted (ID: 869)
+[2026-05-25 13:33:13] [DEBUG] MainServer: System update intercepted (ID: 534)
+[2026-05-25 13:33:13] [ERROR] MainServer: Connection denied (ID: 987)
+[2026-05-25 13:33:13] [WARNING] Database: System update denied (ID: 135)
+[2026-05-25 13:33:13] [ERROR] UI_Module: System update denied (ID: 714)
+[2026-05-25 13:33:13] [DEBUG] MainServer: System update timed out (ID: 13)
+[2026-05-25 13:33:13] [INFO] Database: Request successful (ID: 988)
+[2026-05-25 13:33:13] [INFO] Storage: Data backup timed out (ID: 344)
+[2026-05-25 13:33:13] [WARNING] Storage: Request intercepted (ID: 87)
+[2026-05-25 13:33:13] [ERROR] MainServer: System update timed out (ID: 487)
+[2026-05-25 13:33:28] [TRACE] Manual trace test initiated
+[2026-05-25 13:33:38] [TRACE] PROFILER: Full Log Display took 19.879000 ms
+[2026-05-25 13:34:10] [TRACE] PROFILER: History Restoration took 1.024000 ms
+[2026-05-25 13:39:02] [TRACE] PROFILER: History Restoration took 0.990000 ms
+[2026-05-25 13:39:17] [TRACE] PROFILER: Full Log Display took 27.725000 ms
+[2026-05-25 13:40:10] [TRACE] PROFILER: History Restoration took 1.047000 ms
+[2026-05-25 13:41:11] [TRACE] PROFILER: History Restoration took 1.073000 ms
+[2026-05-25 14:07:30] [TRACE] PROFILER: History Restoration took 1.071000 ms
+[2026-05-25 14:08:36] [TRACE] PROFILER: History Restoration took 1.185000 ms
+[2026-05-25 14:08:50] [TRACE] PROFILER: Full Log Display took 30.804000 ms
+[2026-05-25 14:09:06] [TRACE] PROFILER: History Restoration took 0.975000 ms
+[2026-05-25 14:09:58] [TRACE] PROFILER: History Restoration took 1.227000 ms
+[2026-05-25 14:10:08] [TRACE] PROFILER: History Restoration took 0.944000 ms
